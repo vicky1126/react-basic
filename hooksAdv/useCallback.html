@@ -5,7 +5,7 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo } = React;
+  const { useState, useEffect, useMemo, memo, useCallback } = React;
   const sampleData = [
     {
       id: 1,
@@ -45,7 +45,7 @@
   ];
 
   // 使用 memo
-  const DataTable = memo(({filterProducts}) => {
+  const DataTable = memo(({filterProducts, handleCheck}) => {
     console.log(`元件更新觸發`);
     return (<table className='table'>
       <tbody>
@@ -54,6 +54,7 @@
             <tr key={product.id}>
               <td>{product.title}</td>
               <td>{product.price}</td>
+              <td><input type="checkbox" onChange={handleCheck} value={product.title}/*沒打的話 value 是 on *//></td>
             </tr>
           );
         })}
@@ -67,6 +68,7 @@
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
     const [text, setText] = useState('')
+    const [item, setItem] = useState([])
 
     const filterProducts = useMemo(() => {
       return [...products]
@@ -78,6 +80,17 @@
         });
     }, [ascending, search]);
 
+    //傳入一個方法
+    const handleCheck = useCallback(((e)=>{
+      console.log('handleCheck 已經被觸發')
+      if(e.target.checked){ //判斷 checkbox 是否有被選取
+        setItem([...item, e.target.value])
+      }
+      else{
+        setItem(item.filter((item) => item !== e.target.value))
+      }
+    }), [item]) // [空] -> 保留在初始狀態，每次都是一個空陣列在加入 item，所以陣列裡只有一個 item
+                //[item] -> 給定條件將勾選的 item 加入陣列
     return (
       <>
         <input type="text"
@@ -99,13 +112,15 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <DataTable filterProducts={filterProducts}></DataTable>
+        <p>選擇項目:{item}</p>
+        <DataTable filterProducts={filterProducts} handleCheck={handleCheck}></DataTable>
       </>
     );
   };
 
   ReactDOM.createRoot(document.querySelector('#root')).render(<App />);
 </script>
+
 
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>

@@ -51,6 +51,29 @@
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
 
+    const filterProducts = useMemo(()=>{
+      // 1. 過濾 -> filter
+      const filter = [...products].filter((item) => item.title.match(search))
+
+      // 2. 排序 -> sort
+      return filter.sort((a, b) => { //sort 會傳回 filter，filter 再傳回 filterProducts
+        return ascending? a.price - b.price : b.price - a.price; 
+        // a.price - b.price：價格從小到大排序（升序）。
+        // b.price - a.price：價格從大到小排序（降序）。
+      });
+    },[ascending, search]) 
+
+
+    // 精簡寫法:
+    // const filterProducts = useMemo(()=>{
+    //   // 1. 過濾 -> filter
+    //   return [...products]
+    //   .filter((item) => item.title.match(search))      
+    //   .sort((a, b) => ascending? a.price - b.price : b.price - a.price);
+
+    // },[ascending, search]) 
+
+    
     return (
       <>
         升降冪：
@@ -67,6 +90,21 @@
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        <table className="table" >
+          <tbody>
+            {
+              filterProducts.map((item) => {
+                return(
+                  <tr key={item.id}>
+                    <td>{item.title}</td>
+                    <td>{item.price}</td>
+                  </tr>)
+              })
+            }
+           
+
+          </tbody>  
+        </table>
       </>
     );
   };

@@ -10,8 +10,30 @@ const { useState, useEffect, useRef } = React;
 // https://usehooks.com/
 // https://usehooks.com/useDebounce/
 
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = React.useState(value);
+
+  React.useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 const App = () => {
   const [text, setText] = useState('')
+
+  const debounceText = useDebounce(text, 500); //打字停下超過 0.5 秒才會觸發 console.log('假設要發出非同步請求')
+
+  useEffect(()=>{
+    console.log('假設要發出非同步請求')
+  }, [debounceText])
 
   return (<>
     <input type="text" onChange={e => setText(e.target.value)}
@@ -23,7 +45,6 @@ const App = () => {
 ReactDOM.createRoot(document.querySelector('#root'))
   .render(<App/>)
 </script>
-
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

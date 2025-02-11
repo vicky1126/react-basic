@@ -5,16 +5,26 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useMemo } = React;
 
 let num = 0;
 const App = () => {
   const [price, setPrice] = useState(100);
   const [qty, setQty] = useState(1);
+  const [text, setText] = useState('123');
+
+  const memoTotal = useMemo(()=>{
+    console.log("memo被觸發")
+
+    return price * qty 
+    // 會將 price * qty 的值傳回給 memoTotal
+    // 與 const total = price * qty; 的差異在 useMemo 可以設定條件，滿足條件才觸發; 
+  },[price, qty])// 當 price 和 qty 更動時才會觸發
 
   const total = price * qty;
   num++;
   console.log(`程式碼已經被計算 ${num} 次`);
+  console.log('total:', total)
 
 
   return (<>
@@ -22,8 +32,9 @@ const App = () => {
     <input type="number" value={price} onChange={(e) => setPrice(parseInt(e.target.value))} />
     <input type="number" value={qty} onChange={(e) => setQty(parseInt(e.target.value))} />
     <div>
-      總價：{total}
+      總價：{total}<br/>總價useMemo：{memoTotal}
     </div>
+    <input type="text" value={text} onChange={(e)=> setText(e.target.value)}/>
   </>)
 }
 

@@ -9,26 +9,66 @@
   const { useState, useReducer } = React;
 
   const App = () => {
-    const [num, setNum] = useState(0)
+  
+    const [state, dispatch] = useReducer( // state: 當前狀態; dispatch(action)：用來觸發 reducer 執行
+      // callback function, state
+      function(state, action){ // action 來自於 dispatch 的參數
+        console.log(state, action); 
+        switch (action.type) {
+          case 'INCREMENT':
+            return{
+              num: state.num + 1
+            }
+          case 'DECREMENT':
+            return{
+              num: state.num - 1
+            }
+          case 'SET_NUM':
+            return{
+              num: action.payload
+            }
+        
+          default:
+            break;
+        }
+        return state // 將當前狀態傳給 dispatch()
+      },
+      {num: 0} // 初始狀態
+    )
+
     function increment() {
-      setNum( num + 1);
+      dispatch({
+        type: 'INCREMENT' // type：定義要執行的動作（例如 "INCREMENT"）
+      });
     }
+
     function decrement() {
-      setNum( num - 1);
+      dispatch({
+        type: 'DECREMENT' // type：定義要執行的動作（例如 "INCREMENT"）
+      });
+    }
+
+    function setNum(e){
+      dispatch({
+        type: 'SET_NUM',                  
+        payload: parseInt(e.target.value) //payload 通常用來攜帶額外的數據，讓 reducer 可以根據這些數據來更新 state
+                                          //因為傳回的值是在 input 上撰寫的，所以預設型態是字串
+                                          //利用 parseInt() 轉成 int                                    
+      });
     }
 
     return (
       <>
-        <button type="button" onClick={() => decrement() }>-</button>
-        {num}
-        <button type="button" onClick={() => increment() }>+</button>
+        <button type="button" onClick={ () => decrement() }>-</button>
+        {state.num}
+        <button type="button" onClick={ () => increment() }>+</button>
+        <input type="number" value={state.num} onChange={ e => setNum(e) }/>
       </>
     );
   };
 
   ReactDOM.createRoot(document.querySelector('#root')).render(<App />);
 </script>
-
 <!-- 🙇🙇練習結束🙇🙇 -->
 </main>
   

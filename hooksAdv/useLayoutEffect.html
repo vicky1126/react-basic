@@ -6,7 +6,7 @@
 
 <div id="root"></div>
 <script type="text/babel">
-  const { useState, useEffect, useMemo, memo, useCallback } = React;
+  const { useState, useEffect, useMemo, memo, useCallback, useLayoutEffect } = React;
   const sampleData = [
     {
       id: 1,
@@ -48,7 +48,7 @@
   // 使用 memo
   const DataTable = memo(({products, handleSelectCheck}) => {
     console.log(`元件更新觸發`);
-    return (<table className='table'>
+    return (<table className='table table-dark'>
       <thead>
         <tr>
           <td>品項</td>
@@ -78,8 +78,39 @@
     const [ascending, setAscending] = useState(true);
     const [search, setSearch] = useState('');
     const [items, setItems] = useState([]);
-
     const [text, setText] = useState('');
+
+    //元件初始化的生命週期
+    // 1. function 元件
+    // 2. 建立 visual DOM
+    // 3. useLayoutEffect
+    // 4. 畫面渲染
+    // 5. uesEffect
+
+    console.time('useEffect');
+    console.time('useLayoutEffect');
+
+    useLayoutEffect(()=>{
+      console.log('useLayoutEffect被觸發了');
+      const array = [];
+      for(let index = 0; index < 100000000; index++){
+        array.push('gvhjbcged')
+      }
+      setProducts(sampleData);
+      console.timeEnd('useLayoutEffect');
+    },[])
+
+    useEffect(()=>{
+      console.log('useEffect被觸發了');
+      const array = [];
+      for(let index = 0; index < 100000000; index++){
+        array.push('gvhjbcged')
+      }
+      //setProducts(sampleData);
+      console.timeEnd('useEffect');
+    },[])
+
+
     
     // ======
     const handleSelectCheck = useCallback((e) => {
