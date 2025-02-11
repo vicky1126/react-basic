@@ -7,9 +7,33 @@
 <div id="root"></div>
 <script type="text/babel">
 
+const {useState} = React;
+
+const SearchBox = ({text, onSearchHandler}) =>{
+  return(
+    <>
+      <label htmlFor="search">搜尋</label>
+      <input id="search" type="text" 
+      className="form-control" 
+      value={text} onChange={onSearchHandler}/>  
+    </>
+  )
+}
+
 const App = () => {
+  
+  const[text, setText] = useState('hello')
+
+  const onSearchHandler = (e) =>{
+    console.log(e.target.value);
+    setText(e.target.value);
+  }
+
   return (<div>
-    
+    {/*htmlFor 用來設定 <label> 的 for 屬性，讓 <label> 連結到對應的 <input> 元素*/}
+    <SearchBox text={text} onSearchHandler={onSearchHandler}/>
+    <hr />
+    {text}
   </div>)
 }
 

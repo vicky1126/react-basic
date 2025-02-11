@@ -8,22 +8,55 @@
 </div>
 <script>
 // #1 原生 JS 查看 DOM 元素
+// const btn = document.getElementById('btn');
+// console.dir(btn);
 </script>
 <!--  -->
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
+//let myModal;
 const App = () => {
   // #2 使用 useRef
+  // const btnRef = useRef(null); // null是初始值
+  // useEffect(()=>{
+  //   console.log(btnRef)
+  // })
 
   // 3 操作 Bootstrap 改為使用 ref
 
+  const modalRef = useRef(null);
+  const myModal = useRef(null);
 
+  const openModal = ()=>{
+    myModal.current.show();
+  }
+
+  useEffect(()=>{
+    myModal.current = new bootstrap.Modal(modalRef.current) 
+  })
+ 
+
+  //4.
+  const [num, setNum] = useState(1); //useState 會刷新num
+  const num2 = useRef(1); //useRef 不會刷新
+
+  console.log(1);
+  console.log('num1:', num, 'num2:', num2);
+
+  useEffect(() =>{
+    setInterval(()=>{
+      setNum((pre) => pre + 1)
+      num2.current = num2.current + 1
+    },500)
+  },[])
+
+  
   return (
     <>
-      <button type="button" className="btn btn-primary">打開 Modal</button>
-      <div className="modal fade" tabIndex="-1">
+      <button type="button" className="btn btn-primary" onClick={openModal}/*ref={btnRef}*/>打開 Modal</button>
+      <div className="modal fade" tabIndex="-1" ref={modalRef}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

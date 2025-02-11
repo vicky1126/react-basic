@@ -3,12 +3,30 @@
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">React Hook Form 元件化</h1><small>檔名：<code>hookFormComponent.html</code></small></div>
 <!-- 🔥🔥練習開始🔥🔥 -->
-
 <div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/react-hook-form@7.33.1/dist/index.umd.min.js"></script>
 <script type="text/babel">
   const { useState, useEffect } = React;
   const { useForm, useWatch } = ReactHookForm;
+
+  // input, checkbox, select
+  const Input = ({register, errors, id, labelText, type, rules}) =>{
+    return(<div className='mb-3'>
+            <label htmlFor={id} className='form-label'>
+              {labelText}
+            </label>
+            <input
+              id={id}
+              type={type}
+              {...register(id, rules)}
+              className={`form-control ${errors[id] && 'is-invalid'}`}
+            />
+            {errors[id] && (
+              <div className='invalid-feedback'>{errors?.[id]?.message}</div>
+            )}
+          </div>)
+  }
+  
 
   const App = () => {
     const {
@@ -33,31 +51,24 @@
     return (
       <div>
         <form action='' onSubmit={handleSubmit(onSubmit)}>
-          <div className='mb-3'>
-            <label htmlFor='username' className='form-label'>
-              使用者名稱
-            </label>
-            <input
-              id='username'
-              type='text'
-              {...register('username', { required: {
-                value: true,
-                message: '使用者名稱為必填'
-              } })}
-              className={`form-control ${errors.username && 'is-invalid'}`}
-            />
-            {errors.username && (
-              <div className='invalid-feedback'>{errors?.username?.message}</div>
-            )}
-          </div>
-          <div className='mb-3'>
-            <label htmlFor='email' className='form-label'>
-              Email
-            </label>
-            <input
-              id='email'
-              type='text'
-              {...register('email', {
+          <Input 
+            register={register} 
+            errors={errors} 
+            id="username"
+            labelText="使用者名稱"
+            type="text"
+            rules={{ required: {
+              value: true,
+              message: '使用者名稱為必填'
+          }}}/>
+
+          <Input 
+            register={register} 
+            errors={errors} 
+            id="email"
+            labelText="Email"
+            type="email"
+            rules={{
                 required: {
                   value: true,
                   message: 'Email 為必填'
@@ -66,13 +77,9 @@
                   value: /^\S+@\S+$/i,
                   message: 'Email 格式不正確'
                 }
-              })}
-              className={`form-control ${errors.email && 'is-invalid'}`}
-            />
-            {errors.email && (
-              <div className='invalid-feedback'>{errors?.email?.message}</div>
-            )}
-          </div>
+          }}/>
+          
+          
           <div className='mb-3'>
             <label htmlFor='tel' className='form-label'>
               電話

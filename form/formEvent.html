@@ -10,15 +10,25 @@
     const [search, setSearch] = useState('');
 
     // 使用 form submit 送出
+    const formHandleSubmit = (e) =>{
+      e.preventDefault();
+      console.log('開始搜尋:', search);
+    }
 
+    const enterHandleSubmit = (e) =>{
+      console.dir(e)
+      if(e.key === 'Enter'){
+        console.log('開始搜尋:', search);
+      }
+      
+    }
 
     // Enter custom submit
 
-
-    
-  
     return (<div>
-      <form>
+      {/*如果 <form> 內只有一個 <input> ， 就能透過按 Enter 觸發 submit*/}
+
+      <form onSubmit={formHandleSubmit}> 
         <div className="mb-3">
           <label htmlFor="search2" className="form-label">搜尋</label>
           <input id="search2" type="search" className="form-control" name="search"
@@ -27,11 +37,15 @@
         </div>
       </form>
 
+      {/*如果 <form> 內有多個 <input> ， 或是沒有在<form> 內也想透過按 Enter 觸發 submit*/}
+
       <label htmlFor="search1" className="form-label">搜尋</label>
       {/* https://reactjs.org/docs/events.html#keyboard-events */}
       <input id="search1" type="search" className="form-control" name="search"
       value={search}
-      onChange={(e) => setSearch(e.target.value)} />
+      onChange={(e) => setSearch(e.target.value)} //用 onChange 綁定資料狀態
+      onKeyPress={enterHandleSubmit} //用 onKeyPress 觸發 submit 行為
+      />
     </div>)
   }
   

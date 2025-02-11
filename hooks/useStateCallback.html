@@ -12,13 +12,32 @@ const App = () => {
   // #6 關於前一個狀態
   const [arr, setArr] = useState([]);
 
+  function mergeArrData(params){
+    const newArray = [{num:1}, {num:2}, {num:3}]
+    //setArr([...arr, ...newArray]);
+    setArr((pre) => {
+      console.log('前一個狀態:', pre)
+      return([...pre, ...newArray]) //將 setInterval() 新增的資料加在前一個陣列(pre)裡
+
+    })
+  }
+
+  // useEffect(() => {
+  //   mergeArrData();
+  // },[])
+
+  useEffect(() => {
+    setInterval(() => { //setInterval() 每隔1秒(1000)執行一次
+      mergeArrData();
+    },1000)
+  },[])
 
   return (<div>
     
     <ul>
       {arr.map((item, key) => <li key={key}>{ item.num }</li>)}
     </ul>
-    <button type="button" >新增一組陣列及合併</button>
+    <button type="button" onClick={mergeArrData}>新增一組陣列及合併</button> 
   </div>)
 }
 

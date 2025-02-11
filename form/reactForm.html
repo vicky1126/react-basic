@@ -8,20 +8,50 @@
 const { useState } = React
 const App = () => {
 
+  const [inputState,setInputState] = useState('vicky');
+
+  // #select
+  const optionList=['台北', '台中', '高雄']
+  const optionListMulti=['台北(多選)', '台中(多選)', '高雄(多選)']
+  const [seletState, setSeletState] = useState('');
+  const [seletMultiState, setSeletMultiState] = useState([]);
+  const selectHandler = e =>{
+    console.dir(e);
+    //console.log([...e.target.selectedOptions].map((option) => option.value))
+    setSeletMultiState([...e.target.selectedOptions].map((option) => option.value))
+  }
   return (<div>
   {/* #1 input */}
-  <label htmlFor="username">使用者名稱 </label>
-  <input id="username" type="text"/>
+  <label htmlFor="username">使用者名稱 {inputState} </label>
+  <input id="username" type="text" value={inputState} 
+  onChange={(e)=>{setInputState(e.target.value)}}/>
+  <br />
+  
 
   {/* #2 select 選擇、預設值 */}
-  <select name="" id="" >
+   {seletState}
+  <select name="" id="" value={seletState} onChange={(e)=>{setSeletState(e.target.value)}}>
     <option value="" disabled>-- 請選擇地區 --</option>
+    {
+      optionList.map((location)=>{
+        return(<option value = {location} key={location}> {location} </option>)
+      })
+    }
   </select>
 
+  
   {/* #3 multiSelect */}
-  <select name="" id="">
+  {seletMultiState}
+  <select name="" id="" multiple={true} value={seletMultiState}
+    onChange={selectHandler}>
+    <option value="1" disabled>-- 請選擇地區 --</option>
+    {
+      optionListMulti.map((location)=>{
+        return(<option value = {location} key={location}> {location} </option>)
+      })
+    }
+  </select><br/>
 
-  </select>
   </div>)
 }
 

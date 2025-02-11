@@ -7,10 +7,20 @@
 <script type="text/babel">
 // #1 取出 useState 的方法
 
+const {useState} = React; //解構: 等同於 const useState = React.useState;
 const App = () => {
   // #2 定義狀態
+
+  // [num, setNum] 前者是變數，後者是方法
+  // useState(0): 設預設值為0，也就是 let num = 0;
+  const [num, setNum] = useState(0);
+
   return (<div>
-    {/* 使用 set 將值寫入 */}
+    {num}
+    <button type="button" onClick={() =>{
+      setNum(num + 1);
+      console.log(num);
+    }}>btn</button>
     </div>)
 }
 
